@@ -24,7 +24,7 @@ I'm having problems with the stability of the message because the message not ha
 Make sure the main controller is disconnected before connecting the Arduino board, this is easy to do by unplugging the connector CN301 in the main board. 
 
 Once the main board is disconnected you can solder 5 wires to the CN501 connector on the DFLB board.
-![](https://github.com/AlejandroPerez92/cdj800spi/blob/master/images/wiring.png)
+![](https://github.com/AlejandroPerez92/cdj800spi/blob/main/images/wiring.png)
 
 | CN501 | Arduino UNO | Name |
 |-------|-------------|------|
