@@ -112,22 +112,21 @@ Message createMessage(byte (&arr)[19])
 byte currentMessage[19];
 int i;
 
-ISR (SPI_STC_vect)   //Inerrrput routine function
+//Inerrrput routine function
+ISR (SPI_STC_vect)
 {
+  //Check integrity message integrity
   if(i == 0 && SPDR != 1) {
-    // Serial.println("-------");
     i = 0;
     return;
   }
 
   if(i == 1 && SPDR != 16) {
-    // Serial.println("++++++++");
     i = 0;
     return;
   }
 
   if(i == 2 && SPDR != 0) {
-    // Serial.println("++++++++");
     i = 0;
     return;
   }
@@ -144,6 +143,7 @@ ISR (SPI_STC_vect)   //Inerrrput routine function
 
   currentMessage[i] = SPDR;
 
+  //Action on a complete message
   if (i == 18) {
     if(messagesQueue.isFull()){
       messagesQueue.dequeue();

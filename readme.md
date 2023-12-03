@@ -16,7 +16,7 @@ If your board uses 3.3v you will need a logic converter to work with 5v.
 For build it you need PlatformIO and VSCode.
 
 ### Current Status
-Currently, with this project you will be able to see the output messages from the microcontroller in the Serial output.
+Now, we have a complete mapping of the inputs. You can play with it by printing any field of the Message struct to Serial output.
 
 I'm having problems with the stability of the message because the message not have any CRC or mechanism to prevent malformed messages.
 
@@ -38,6 +38,6 @@ Once the main board is disconnected you can solder 5 wires to the CN501 connecto
 
 The message is a 19bytes long similar to the CDJ1000mk3.
 
-| Byte  | 0 | 1  | 2 | 3     | 4     | 5     | 6   | 7   | 8   | 9   | 10  | 11  | 12 | 13  | 14  | 15  | 16  | 17  | 18  |
-|-------|---|----|---|-------|-------|-------|-----|-----|-----|-----|-----|-----|----|-----|-----|-----|-----|-----|-----|
-| Value | 1 | 16 | 0 | TOUCH | PITCH | PITCH | 128 | 192 | JOG | JOG | JOG | JOG | 0  | BTN | BTN | BTN | BTN | BTN | BTN |
+| Byte  | 0 | 1  | 2 | 3     | 4     | 5     | 6   | 7   | 8   | 9   | 10  | 11  | 12         | 13  | 14  | 15  | 16  | 17  | 18  |
+|-------|---|----|---|-------|-------|-------|-----|-----|-----|-----|-----|-----|------------|-----|-----|-----|-----|-----|-----|
+| Value | 1 | 16 | 0 | TOUCH | PITCH | PITCH | 128 | 192 | JOG | JOG | JOG | JOG | JOGSTATUS  | BTN | BTN | BTN | BTN | BTN | BTN |
