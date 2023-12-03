@@ -12,6 +12,7 @@ struct Message {
   bool jogPresure;
   bool btnCue;
   bool btnRev;
+  bool btnCueOut;
   bool btnCueIn;
   bool btnLoop1;
   bool btnLoop2;
@@ -80,6 +81,7 @@ Message createMessage(byte (&arr)[19])
   message.jogPresure = arr[12] & 0x10;
   message.btnCue = arr[14] & 0x80;
   message.btnRev = arr[14] & 0x20; 
+  message.btnCueOut = arr[14] & 0x40;
   message.btnCueIn = arr[14] & 0x10;
   message.btnLoop1 = arr[14] & 0x08; 
   message.btnLoop2 = arr[14] & 0x04; 
