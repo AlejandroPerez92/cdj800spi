@@ -2,6 +2,7 @@
 #include<SPI.h>
 #include <ArduinoQueue.h>
 
+const int LENGTH = 20;
 struct Message {
   byte touch;
   uint16_t pitch;
@@ -52,6 +53,7 @@ void setup()
   Serial.begin(115200);
 
   SPCR = (1 << SPE)|(0 << MSTR);
+  SPI.setDataMode(SPI_MODE3);
   SPI.attachInterrupt();
   
   Serial.println("Let's go");
@@ -64,12 +66,12 @@ void loop(void)
   }
 
   Message message = messagesQueue.dequeue();
-
-  Serial.println(message.btnPlay);
+  
+  Serial.println(message.jogSpeed);
   delay(50);
 }
 
-Message createMessage(byte (&arr)[19])
+Message createMessage(byte (&arr)[LENGTH])
 {
   Message message;
   message.touch = arr[3];
@@ -109,42 +111,45 @@ Message createMessage(byte (&arr)[19])
   return message;
 }
 
-byte currentMessage[19];
-int i;
+byte currentMessage[LENGTH];
+int i = 0;
 
 //Inerrrput routine function
 ISR (SPI_STC_vect)
 {
+  byte current = SPDR;
+  SPDR = 0;
+
   //Check integrity message integrity
-  if(i == 0 && SPDR != 1) {
+  if(i == 0 && current != 1) {
     i = 0;
     return;
   }
 
-  if(i == 1 && SPDR != 16) {
+  if(i == 1 && current != 16) {
     i = 0;
     return;
   }
 
-  if(i == 2 && SPDR != 0) {
-    i = 0;
-    return;
-  }
-
-  if(i == 6 && SPDR != 128) {
-    i = 0;
-    return;
-  }
-
-  if(i == 7 && SPDR != 192) {
-    i = 0;
-    return;
-  }
-
-  currentMessage[i] = SPDR;
+  currentMessage[i] = current;
+  i ++;
 
   //Action on a complete message
-  if (i == 18) {
+  if (i == LENGTH) {
+    i = 0;
+    
+    //CheckCrc
+    int calculedCrc = 0;
+
+    for (byte ci = 0; ci < LENGTH - 1; ci++)
+    {
+      calculedCrc += currentMessage[ci];
+    }
+    
+    if((calculedCrc % 255) != currentMessage[LENGTH - 1]){
+      return;
+    }
+
     if(messagesQueue.isFull()){
       messagesQueue.dequeue();
     }
@@ -152,12 +157,6 @@ ISR (SPI_STC_vect)
     Message message = createMessage(currentMessage);
     messagesQueue.enqueue(message);
 
-    i = 0;
-
-    SPDR = 0xAA;
     return;
   }
-
-  SPDR = 0xAA;
-  i ++;
 }

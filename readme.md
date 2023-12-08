@@ -18,8 +18,6 @@ For build it you need PlatformIO and VSCode.
 ### Current Status
 Now, we have a complete mapping of the inputs. You can play with it by printing any field of the Message struct to Serial output.
 
-I'm having problems with the stability of the message because the message not have any CRC or mechanism to prevent malformed messages.
-
 ## Wiring
 Make sure the main controller is disconnected before connecting the Arduino board, this is easy to do by unplugging the connector CN301 in the main board. 
 
@@ -38,6 +36,8 @@ Once the main board is disconnected you can solder 5 wires to the CN501 connecto
 
 The message is a 19bytes long similar to the CDJ1000mk3.
 
-| Byte  | 0 | 1  | 2 | 3     | 4     | 5     | 6   | 7   | 8   | 9   | 10  | 11  | 12         | 13  | 14  | 15  | 16  | 17  | 18  |
-|-------|---|----|---|-------|-------|-------|-----|-----|-----|-----|-----|-----|------------|-----|-----|-----|-----|-----|-----|
-| Value | 1 | 16 | 0 | TOUCH | PITCH | PITCH | 128 | 192 | JOG | JOG | JOG | JOG | JOGSTATUS  | BTN | BTN | BTN | BTN | BTN | BTN |
+| Byte  | 0 | 1  | 2 | 3     | 4     | 5     | 6   | 7   | 8   | 9   | 10  | 11  | 12         | 13  | 14  | 15  | 16  | 17  | 18  | 19  |
+|-------|---|----|---|-------|-------|-------|-----|-----|-----|-----|-----|-----|------------|-----|-----|-----|-----|-----|-----|-----|
+| Value | 1 | 16 | 0 | TOUCH | PITCH | PITCH | 128 | 192 | JOG | JOG | JOG | JOG | JOGSTATUS  | BTN | BTN | BTN | BTN | BTN | BTN | CRC |
+
+The CRC is calculated with this formula (Byte0 + Byte1 + .... + Byte18) % 255
