@@ -41,6 +41,14 @@ struct Message {
 };
 
 ArduinoQueue<Message> messagesQueue(2);
+byte sendMessages[][LENGTH] = {
+  {0,80,17,80,0,1,4,16,16,21,0,0,0,88,0,0,0,0,67,0},
+  {16,240,43,129,4,184,64,8,161,63,0,179,0,0,0,0,0,0,51,0},
+  {32,168,32,136,128,2,10,40,136,10,0,186,182,186,0,0,0,0,192,0},
+  {48,166,54,240,193,19,15,61,112,106,0,0,0,0,0,0,0,0,198,0},
+  {64,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+  {80,0,0,0,0,4,0,0,0,0,0,0,208,71,0,0,0,0,27,0}
+};
 
 void setup()
 {
@@ -112,13 +120,18 @@ Message createMessage(byte (&arr)[LENGTH])
 }
 
 byte currentMessage[LENGTH];
-int i = 0;
+byte i = 0;
+byte currentSendIndex = 0;
 
 //Inerrrput routine function
 ISR (SPI_STC_vect)
 {
   byte current = SPDR;
-  SPDR = 0;
+  if(i < LENGTH - 1) {
+    SPDR = sendMessages[currentSendIndex][i + 1];
+  }else{
+    SPDR = sendMessages[currentSendIndex + 1][0];
+  }
 
   //Check integrity message integrity
   if(i == 0 && current != 1) {
@@ -137,6 +150,11 @@ ISR (SPI_STC_vect)
   //Action on a complete message
   if (i == LENGTH) {
     i = 0;
+    currentSendIndex ++;
+
+    if (currentSendIndex > 5) {
+      currentSendIndex = 0;
+    }
     
     //CheckCrc
     int calculedCrc = 0;
