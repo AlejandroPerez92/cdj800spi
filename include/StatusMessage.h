@@ -7,6 +7,7 @@
 class StatusMessage
 {
 public:
+    StatusMessage();
     static StatusMessage createMessage(byte (&arr)[BUFFER_LENGTH]);
     static bool isValidCrc(byte (&arr)[BUFFER_LENGTH]);
     byte touch;

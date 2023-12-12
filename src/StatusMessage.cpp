@@ -1,5 +1,7 @@
 #include <StatusMessage.h>
 
+StatusMessage::StatusMessage(){}
+
 StatusMessage StatusMessage::createMessage(byte (&arr)[BUFFER_LENGTH])
 {
     StatusMessage message;
