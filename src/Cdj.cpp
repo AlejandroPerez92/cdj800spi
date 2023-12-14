@@ -103,7 +103,7 @@ byte Cdj::calculateDispMessageCrc(byte (&arr)[BUFFER_LENGTH])
 {
     int calculedCrc = 0;
 
-    for (byte ci = 1; ci < BUFFER_LENGTH - 1; ci++)
+    for (byte ci = 1; ci < BUFFER_LENGTH - 2; ci++)
     {
         calculedCrc += arr[ci];
     }
