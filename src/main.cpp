@@ -12,10 +12,18 @@ void setup()
 
 void loop(void)
 {
-  StatusMessage parsed = cdj.lastStatus();
+  StatusMessage status = cdj.lastStatus();
+  
+  if(status.btnPlay) {
+    cdj.clearDisplayJog();
+  }
 
-  Serial.println(parsed.btnPlay);
-  delay(50);
+  if(status.btnEject) {
+    cdj.setLoadInAnimation();
+  }
+
+  Serial.println(status.btnPlay);
+  delay(100);
 }
 
 ISR(SPI_STC_vect)

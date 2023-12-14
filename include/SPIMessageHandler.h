@@ -14,18 +14,19 @@ struct Message
 class SPIMessageHandler
 {
 public:
-    SPIMessageHandler();
+    SPIMessageHandler(byte (*messages)[BUFFER_LENGTH]);
     void init();
-    void handleSPI(byte current);
-    byte nextByte();
+    void reciveByte(byte current);
+    byte nextByteToSend();
     bool isMessageAvailable();
     Message popMessage();
 
 private:
-    byte sendMessages[6][BUFFER_LENGTH];
+    byte (*sendMessages)[BUFFER_LENGTH];
     ArduinoQueue<Message> queue;
     byte i;
-    byte currentSendIndex;
+    byte sendIndex;
+    byte currentSendMessageIndex;
     byte currentMessage[BUFFER_LENGTH];
 };
 

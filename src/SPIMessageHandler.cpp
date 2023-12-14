@@ -1,15 +1,8 @@
 #include "SPIMessageHandler.h"
 
-SPIMessageHandler::SPIMessageHandler()
-    : sendMessages{
-          {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-          {16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-          {32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-          {48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-          {64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-          {80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      },
-      queue{2}, i{0}, currentSendIndex{0}
+SPIMessageHandler::SPIMessageHandler(byte (*messages)[BUFFER_LENGTH])
+    : sendMessages(messages),
+      queue{2}, i{0}, sendIndex{0}, currentSendMessageIndex{0}
 {
 }
 
@@ -28,7 +21,7 @@ void SPIMessageHandler::init()
     SPI.attachInterrupt();
 }
 
-void SPIMessageHandler::handleSPI(byte current)
+void SPIMessageHandler::reciveByte(byte current)
 {
     // Find the start of the message
     if (i == 0 && current != 1)
@@ -50,12 +43,6 @@ void SPIMessageHandler::handleSPI(byte current)
     if (i == BUFFER_LENGTH)
     {
         i = 0;
-        currentSendIndex++;
-
-        if (currentSendIndex > 5)
-        {
-            currentSendIndex = 0;
-        }
 
         if (queue.isFull())
         {
@@ -69,16 +56,22 @@ void SPIMessageHandler::handleSPI(byte current)
     }
 }
 
-byte SPIMessageHandler::nextByte()
+byte SPIMessageHandler::nextByteToSend()
 {
-    if (i < BUFFER_LENGTH - 1)
+    sendIndex ++;
+
+    if (sendIndex == BUFFER_LENGTH)
     {
-        return sendMessages[currentSendIndex][i + 1];
+        currentSendMessageIndex ++;
+        sendIndex = 0;
     }
-    else
+
+    if (currentSendMessageIndex > 5)
     {
-        return sendMessages[currentSendIndex + 1][0];
+        currentSendMessageIndex = 0;
     }
+    
+    return sendMessages[currentSendMessageIndex][sendIndex];
 }
 
 Message SPIMessageHandler::popMessage()
