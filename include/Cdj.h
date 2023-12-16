@@ -5,13 +5,24 @@
 #include <SPIMessageHandler.h>
 #include <StatusMessage.h>
 
+enum LED_STATUS
+{
+    on,
+    off,
+};
+
+enum COMMAND_TYPE
+{
+    buttonStatus = 5,
+};
+
 class Cdj
 {
 private:
     StatusMessage status;
-    byte sendMessages[6][BUFFER_LENGTH];
+    byte commands[6][BUFFER_LENGTH];
     SPIMessageHandler messageHandler;
-    byte calculateDispMessageCrc(byte (&arr)[BUFFER_LENGTH]);
+    void calculateCommandCrc(int i);
 public:
     Cdj();
     void init();
@@ -22,6 +33,13 @@ public:
     void setLoadInAnimation();
     void setDisplayFullJog();
     void clearDisplayJog();
+    void ledPlaySetStatus(LED_STATUS status);
+    void ledCueSetStatus(LED_STATUS status);
+    void ledRevSetStatus(LED_STATUS status);
+    void ledCueInSetStatus(LED_STATUS status);
+    void ledCueOutSetStatus(LED_STATUS status);
+    void ledBeat8SetStatus(LED_STATUS status);
+    void ledBeat4SetStatus(LED_STATUS status);
 };
 
 #endif

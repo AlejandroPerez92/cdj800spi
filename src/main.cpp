@@ -13,17 +13,28 @@ void setup()
 void loop(void)
 {
   StatusMessage status = cdj.lastStatus();
-  
-  if(status.btnPlay) {
-    cdj.clearDisplayJog();
+
+  if (status.btnBeat4)
+  {
+    cdj.ledBeat4SetStatus(on);
   }
 
-  if(status.btnEject) {
-    cdj.setLoadInAnimation();
+  if (!status.btnBeat4)
+  {
+    cdj.ledBeat4SetStatus(off);
   }
 
-  Serial.println(status.btnPlay);
-  delay(100);
+  if (status.btnCue)
+  {
+    cdj.ledCueSetStatus(on);
+  }
+
+  if (!status.btnCue)
+  {
+    cdj.ledCueSetStatus(off);
+  }
+
+  delay(10);
 }
 
 ISR(SPI_STC_vect)

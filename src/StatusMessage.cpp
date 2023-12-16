@@ -16,10 +16,10 @@ StatusMessage StatusMessage::createMessage(byte (&arr)[BUFFER_LENGTH])
     message.btnRev = arr[14] & 0x20;
     message.btnCueOut = arr[14] & 0x40;
     message.btnCueIn = arr[14] & 0x10;
-    message.btnLoop1 = arr[14] & 0x08;
-    message.btnLoop2 = arr[14] & 0x04;
-    message.btnLoop4 = arr[14] & 0x02;
-    message.btnLoop8 = arr[14] & 0x01;
+    message.btnBeat8 = arr[14] & 0x08;
+    message.btnBeat4 = arr[14] & 0x04;
+    message.btnBeat2 = arr[14] & 0x02;
+    message.btnBeat1 = arr[14] & 0x01;
     message.btnReloop = arr[15] & 0x02;
     message.btnPlay = arr[15] & 0x01;
     message.btnSearchFwd = arr[16] & 0x08;

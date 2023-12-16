@@ -21,10 +21,10 @@ public:
     bool btnRev;
     bool btnCueOut;
     bool btnCueIn;
-    bool btnLoop1;
-    bool btnLoop2;
-    bool btnLoop4;
-    bool btnLoop8;
+    bool btnBeat8;
+    bool btnBeat4;
+    bool btnBeat2;
+    bool btnBeat1;
     bool btnReloop;
     bool btnPlay;
     bool btnSearchFwd;
