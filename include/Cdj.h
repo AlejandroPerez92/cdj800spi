@@ -32,6 +32,8 @@ public:
     void setEjectAnimation();
     void setLoadInAnimation();
     void setDisplayFullJog();
+    void setDisplaySeparator(LED_STATUS status);
+    void setProgressPercentage(byte percentage);
     void clearDisplayJog();
     void ledPlaySetStatus(LED_STATUS status);
     void ledCueSetStatus(LED_STATUS status);

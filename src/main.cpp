@@ -7,6 +7,8 @@ void setup()
 {
   Serial.begin(115200);
   cdj.init();
+  cdj.setDisplaySeparator(on);
+  cdj.setProgressPercentage(50);
   Serial.println("Let's go");
 }
 

@@ -7,7 +7,7 @@ Cdj::Cdj()
                     {32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                     {48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                     {64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    {80, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0},
+                    {80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 },
       messageHandler(commands)
 {
@@ -80,14 +80,77 @@ void Cdj::clearDisplayJog()
     }
 }
 
-void Cdj::ledPlaySetStatus(LED_STATUS status)
+void Cdj::setDisplaySeparator(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 5);
+    if (status == on)
+    {
+        commands[buttonStatus][5] |= (1 << 2);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 5);
+    if (status == off)
+    {
+        commands[buttonStatus][5] &= ~(1 << 2);
+    }
+
+    calculateCommandCrc(buttonStatus);
+}
+
+void Cdj::setProgressPercentage(byte percentage)
+{
+    if (percentage > 100)
+    {
+        percentage = 100;
+    }
+
+    if (percentage < 0)
+    {
+        percentage = 0;
+    }
+
+    byte result = (percentage * 37) / 100;
+
+    for (size_t i = 0; i < result; i++)
+    {
+        if (i < 6)
+        {
+            commands[buttonStatus][5] |= (1 << (i + 3));
+            continue;
+        }
+
+        if (i < 14)
+        {
+            commands[buttonStatus][6] |= (1 << (i - 6));
+            continue;
+        }
+
+        if (i < 22)
+        {
+            commands[buttonStatus][7] |= (1 << (i - 14));
+            continue;
+        }
+
+        if (i < 30)
+        {
+            commands[buttonStatus][8] |= (1 << (i - 22));
+            continue;
+        }
+
+        commands[buttonStatus][9] |= (1 << (i - 30));
+    }
+
+    calculateCommandCrc(buttonStatus);
+}
+
+void Cdj::ledPlaySetStatus(LED_STATUS status)
+{
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 5);
+    }
+
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 5);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -95,12 +158,14 @@ void Cdj::ledPlaySetStatus(LED_STATUS status)
 
 void Cdj::ledCueSetStatus(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 4);
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 4);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 4);
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 4);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -108,12 +173,14 @@ void Cdj::ledCueSetStatus(LED_STATUS status)
 
 void Cdj::ledRevSetStatus(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 3);
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 3);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 3);
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 3);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -121,12 +188,14 @@ void Cdj::ledRevSetStatus(LED_STATUS status)
 
 void Cdj::ledCueInSetStatus(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 2);
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 2);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 2);
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 2);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -134,12 +203,14 @@ void Cdj::ledCueInSetStatus(LED_STATUS status)
 
 void Cdj::ledCueOutSetStatus(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 6);
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 6);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 6);
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 6);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -147,12 +218,14 @@ void Cdj::ledCueOutSetStatus(LED_STATUS status)
 
 void Cdj::ledBeat8SetStatus(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 1);
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 1);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 1);
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 1);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -160,12 +233,14 @@ void Cdj::ledBeat8SetStatus(LED_STATUS status)
 
 void Cdj::ledBeat4SetStatus(LED_STATUS status)
 {
-    if(status == on){
-        commands[5][13] |= (1 << 0);
+    if (status == on)
+    {
+        commands[buttonStatus][13] |= (1 << 0);
     }
 
-    if(status == off){
-        commands[5][13] &= ~(1 << 0);
+    if (status == off)
+    {
+        commands[buttonStatus][13] &= ~(1 << 0);
     }
 
     calculateCommandCrc(buttonStatus);
@@ -199,7 +274,6 @@ void Cdj::calculateCommandCrc(int i)
         calculedCrc += commands[i][ci];
     }
 
-    calculedCrc = calculedCrc % 255;
-
-    commands[i][18] = calculedCrc;
+    calculedCrc = calculedCrc % 256;
+    commands[i][18] = (byte)calculedCrc;
 }
