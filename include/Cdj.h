@@ -16,6 +16,12 @@ enum COMMAND_TYPE
     buttonStatus = 5,
 };
 
+enum DIRECTION
+{
+    rightToLeft,
+    leftToRight,
+};
+
 class Cdj
 {
 private:
@@ -33,7 +39,7 @@ public:
     void setLoadInAnimation();
     void setDisplayFullJog();
     void setDisplaySeparator(LED_STATUS status);
-    void setProgressPercentage(byte percentage);
+    void setProgressPercentage(DIRECTION direction,byte percentage);
     void clearDisplayJog();
     void ledPlaySetStatus(LED_STATUS status);
     void ledCueSetStatus(LED_STATUS status);

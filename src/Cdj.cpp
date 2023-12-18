@@ -95,7 +95,7 @@ void Cdj::setDisplaySeparator(LED_STATUS status)
     calculateCommandCrc(buttonStatus);
 }
 
-void Cdj::setProgressPercentage(byte percentage)
+void Cdj::setProgressPercentage(DIRECTION direction, byte percentage)
 {
     if (percentage > 100)
     {
@@ -109,33 +109,67 @@ void Cdj::setProgressPercentage(byte percentage)
 
     byte result = (percentage * 37) / 100;
 
-    for (size_t i = 0; i < result; i++)
+    if (leftToRight == direction)
     {
-        if (i < 6)
+        for (size_t i = 0; i < result; i++)
         {
-            commands[buttonStatus][5] |= (1 << (i + 3));
-            continue;
-        }
+            if (i < 8)
+            {
+                commands[buttonStatus][9] |= (1 << (7 - i));
+                continue;
+            }
 
-        if (i < 14)
+            if (i < 16)
+            {
+                commands[buttonStatus][8] |= (1 << (15 - i));
+                continue;
+            }
+
+            if (i < 24)
+            {
+                commands[buttonStatus][7] |= (1 << (23 - i));
+                continue;
+            }
+
+            if (i < 32)
+            {
+                commands[buttonStatus][6] |= (1 << (31 - i));
+                continue;
+            }
+
+            commands[buttonStatus][5] |= (1 << (39 - i));
+        }
+    }
+    else
+    {
+        for (size_t i = 0; i < result; i++)
         {
-            commands[buttonStatus][6] |= (1 << (i - 6));
-            continue;
-        }
+            if (i < 6)
+            {
+                commands[buttonStatus][5] |= (1 << (i + 3));
+                continue;
+            }
 
-        if (i < 22)
-        {
-            commands[buttonStatus][7] |= (1 << (i - 14));
-            continue;
-        }
+            if (i < 14)
+            {
+                commands[buttonStatus][6] |= (1 << (i - 6));
+                continue;
+            }
 
-        if (i < 30)
-        {
-            commands[buttonStatus][8] |= (1 << (i - 22));
-            continue;
-        }
+            if (i < 22)
+            {
+                commands[buttonStatus][7] |= (1 << (i - 14));
+                continue;
+            }
 
-        commands[buttonStatus][9] |= (1 << (i - 30));
+            if (i < 30)
+            {
+                commands[buttonStatus][8] |= (1 << (i - 22));
+                continue;
+            }
+
+            commands[buttonStatus][9] |= (1 << (i - 30));
+        }
     }
 
     calculateCommandCrc(buttonStatus);
