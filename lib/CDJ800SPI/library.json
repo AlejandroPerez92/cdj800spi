@@ -1,0 +1,9 @@
+{
+  "name": "CDJ800SPI",
+  "version": "1.0.0",
+  "description": "Pioneer CDJ-800MK2 panel SPI slave driver",
+  "keywords": ["spi", "cdj", "display", "pioneer"],
+  "frameworks": ["arduino"],
+  "platforms": ["atmelavr"],
+  "build": {"includeDir": "src"}
+}

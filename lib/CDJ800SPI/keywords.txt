@@ -1,0 +1,16 @@
+CDJ800SPI	KEYWORD1
+Cdj	KEYWORD1
+StatusMessage	KEYWORD1
+Button	KEYWORD1
+Indicator	KEYWORD1
+JogMode	KEYWORD1
+begin	KEYWORD2
+update	KEYWORD2
+commit	KEYWORD2
+setText	KEYWORD2
+setBpm	KEYWORD2
+setTempo	KEYWORD2
+setTrackNumber	KEYWORD2
+setIndicator	KEYWORD2
+pressed	KEYWORD2
+released	KEYWORD2
